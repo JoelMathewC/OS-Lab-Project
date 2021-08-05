@@ -21,6 +21,11 @@ loadi(3, 16);
 PTBR = PAGE_TABLE_BASE;
 PTLR = 10;
 
+//Adding data to process table
+[PROCESS_TABLE + 11] = 80; //Set the user area page physical address to 80
+[PROCESS_TABLE + 1] = 0; // First process, so set the PID to 0
+[SYSTEM_STATUS_TABLE + 1] = 0;
+
 //setting up the logical pages to link to physical address
 
 //library
