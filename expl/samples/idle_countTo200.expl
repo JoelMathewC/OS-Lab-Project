@@ -5,7 +5,7 @@ int main(){
 	enddecl
 
 	begin
-		val = initialize();
+		//val = initialize();
 		a = 101;
 		while(a <= 200) do
 			temp = exposcall("Write",-2,a);
