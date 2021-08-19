@@ -36,7 +36,7 @@ PTLR = 10;
 [PROCESS_TABLE + 30] = PTBR;
 [PROCESS_TABLE + 31] = PTLR;
 
-[SYSTEM_STATUS_TABLE + 1] = 1;
+
 
 //setting up the logical pages to link to physical address
 

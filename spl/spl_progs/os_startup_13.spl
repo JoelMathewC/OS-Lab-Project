@@ -42,7 +42,7 @@ PTBR = PAGE_TABLE_BASE;
 PTLR = 10;
 
 [PROCESS_TABLE + 1] = 0;
-[PROCESS_TABLE + 4] = CREATED;
+[PROCESS_TABLE + 4] = RUNNING;
 [PROCESS_TABLE + 11] = 82;    //Update user area page
 [PROCESS_TABLE + 13] = 8*512; //User Stack Pointer update
 [PROCESS_TABLE + 12] = 0;     // KPTR to 0
