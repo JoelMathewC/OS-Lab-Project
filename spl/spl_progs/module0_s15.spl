@@ -20,7 +20,7 @@ endif;
 
 //release terminal
 if(functionNum == 9) then 
-	if([TERMINAL_STATUS_TABLE + 1] != [SYSTEM_STATUS_TABLE + 1]) then
+	if([TERMINAL_STATUS_TABLE + 1] != currentPID) then
 		R0 = -1;
 		
 		breakpoint;
