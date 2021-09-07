@@ -42,9 +42,7 @@ if(functionNum == 4) then
 	physicalAddr = [PTBR + 2 * ((R3)/512)] * 512 + (R3)%512;
 	[physicalAddr] = [PROCESS_TABLE + (currentPID * 16) + 8];
 	
-	//print "READ";
-	//print physicalAddr;
-	//print [physicalAddr];
+	
 	
 	return;
 	

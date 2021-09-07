@@ -2,6 +2,7 @@
 alias functionNum R1;
 alias currentPID R2;
 
+//terminal write
 if(functionNum == 3) then
 	multipush(R1,R2,R3);
 	R1 = 8;
