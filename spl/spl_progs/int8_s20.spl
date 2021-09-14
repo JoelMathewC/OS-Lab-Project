@@ -1,0 +1,107 @@
+//INT 8
+print "INT 8"
+
+[PROCESS_TABLE + ([SYSTEM_STATUS_TABLE + 1] * 16) + 9] = 8;
+
+[PROCESS_TABLE + ([SYSTEM_STATUS_TABLE + 1] * 16) + 13] = SP;
+SP = [PROCESS_TABLE + ([SYSTEM_STATUS_TABLE + 1] * 16) + 11] * 512 - 1;
+
+
+alias childPID R0;
+alias iter R1;
+
+R1 = 1;
+call MOD_1;
+
+if(childPID == -1) then
+	[PROCESS_TABLE + ([SYSTEM_STATUS_TABLE + 1] * 16) + 9] = 0;
+	SP = [PROCESS_TABLE + ([SYSTEM_STATUS_TABLE + 1] * 16) + 13];
+	ireturn;
+endif;
+
+alias ptbr R2;
+ptbr = [PROCESS_TABLE + ([SYSTEM_STATUS_TABLE + 1] * 16) + 14];
+
+
+//allocating heap for parent if it does not have any
+iter = 0;
+while(iter < 2) do
+
+	if([ptbr + 2*iter + 4] == -1) then
+	
+		multipush(R0,R1,R2);
+		R1 = 1;
+		call MOD_2;
+		R3 = R0;
+		multipop(R0,R1,R2);
+		
+		[ptbr + 2*iter + 4] = R3;
+		[ptbr + 2*iter + 5] = "1110";
+		
+	endif;
+	
+	iter = iter + 1;
+	
+endwhile;
+
+
+//allocating stack pages for child
+alias childPTBR R3;
+childPTBR = [PROCESS_TABLE + (childPID * 16) + 14];
+iter = 0;
+while(iter < 2) do
+
+	if([ptbr + 2*iter + 16] == -1) then
+	
+		multipush(R0,R1,R2,R3);
+		R1 = 1;
+		call MOD_2;
+		R4 = R0;
+		multipop(R0,R1,R2,R3);
+		
+		[childPTBR + 2*iter + 16] = R4;
+		[childPTBR + 2*iter + 17] = "0110";
+		
+	endif;
+	
+	iter = iter + 1;
+	
+endwhile;
+
+
+//allocating user area page for child
+multipush(R0,R1,R2,R3);
+R1 = 1;
+call MOD_2;
+R4 = R0;
+multipop(R0,R1,R2,R3);
+
+[PROCESS_TABLE + (childPID * 16) + 11] = R4;
+
+
+
+//initializing child process table
+[childPTBR + 3] = [ptbr + 3];  //user id
+[childPTBR + 6] = [ptbr + 6];  //swap flag
+[childPTBR + 10] = [ptbr + 10]; //swap status field
+[childPTBR + 13] = [ptbr + 13]; //uptr
+[childPTBR + 7] = [ptbr + 7]; //inode index
+
+[childPTBR + 0] = 0; //tick
+[childPTBR + 9] = 0; //mode
+[childPTBR + 12] = 0; //kptr
+
+[childPTBR + 2] = [SYSTEM_STATUS_TABLE + 1];
+
+
+
+
+
+
+
+
+
+
+
+
+
