@@ -62,18 +62,17 @@ childPTBR = [child_pt_entry + 14];
 iter = 0;
 while(iter < 2) do
 
-	if([ptbr + 2*iter + 16] == -1) then
+	
 	
 		multipush(R0,R1,R2,R3,R10,R11);
 		R1 = 1;
 		call MOD_2;
 		R4 = R0;
 		multipop(R0,R1,R2,R3,R10,R11);
-		
 		[childPTBR + 2*iter + 16] = R4;
 		[childPTBR + 2*iter + 17] = "0110";
 		
-	endif;
+	
 	
 	iter = iter + 1;
 	
@@ -101,7 +100,7 @@ multipop(R0,R1,R2,R3,R10,R11);
 [child_pt_entry + 9] = 0; //mode
 [child_pt_entry + 12] = 0; //kptr
 
-[child_pt_entry + 2] = currentPID; //pid
+[child_pt_entry + 2] = currentPID; //ppid
 [child_pt_entry + 4] = CREATED;
 
 
@@ -179,12 +178,18 @@ endwhile;
 
 //stack is done
 
+
+
 // copy stack word by word
 alias iter2 R6;
 iter2 = 0;
 iter = 0;
 
+
+
+
 while(iter2<2) do
+	
 	while(iter<512) do
 		[[childPTBR + 16 + 2*iter2] * 512 + iter] = [[ptbr + 16 + 2*iter2] * 512 + iter];
 		iter = iter + 1;
@@ -204,11 +209,11 @@ alias childSP_ret R7;
 childSP_ret = [child_pt_entry + 13] - 1;
 
 
-[[childPTBR + 2 * ((childSP_ret)/ 512)] + ((childSP_ret) % 512)] = 0;
+[[childPTBR + 2 * ((childSP_ret)/ 512)] * 512 + ((childSP_ret) % 512)] = 0;
 
 alias parentSP_ret R8;
 parentSP_ret = [process_table_entry + 13] - 1;
-[[ptbr + 2 * ((parentSP_ret)/ 512)] + ((parentSP_ret) % 512)] = childPID;
+[[ptbr + 2 * ((parentSP_ret)/ 512)] * 512 + ((parentSP_ret) % 512)] = childPID;
 
 
 
