@@ -37,7 +37,7 @@ if(syscallNum == 13) then
 	alias pid R4;
 	pid = [[ptbr + 2 * ((userSp - 4)/512)] * 512 + ((userSp - 4)%512)];
 	
-	pid = [[ptbr + 2 * ((userSp - 3)/512)] * 512 + ((userSp - 3)%512)];
+	
 	
 	
 	if((pid == [SYSTEM_STATUS_TABLE + 1]) || pid < 0 || pid >= 16 || ([PROCESS_TABLE + (pid * 16) + 4] == TERMINATED)) then

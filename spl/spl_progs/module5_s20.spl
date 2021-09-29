@@ -1,4 +1,5 @@
 //print "MOD_5";
+//print "SCHEDULER";
 alias currentPID R0;
 currentPID = [SYSTEM_STATUS_TABLE + 1];
 
@@ -67,6 +68,7 @@ if([new_process_table + 4] == CREATED) then
 	[new_process_table + 9] = 0; //setting mode flag to 0
 	ireturn;
 endif;
+
 
 [new_process_table + 4] = RUNNING;
 multipop(BP);

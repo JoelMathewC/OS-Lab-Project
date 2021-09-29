@@ -1,20 +1,24 @@
 //INT 8
 //print "INT 8";
 
-[PROCESS_TABLE + ([SYSTEM_STATUS_TABLE + 1] * 16) + 9] = 8;
-
-[PROCESS_TABLE + ([SYSTEM_STATUS_TABLE + 1] * 16) + 13] = SP;
-SP = [PROCESS_TABLE + ([SYSTEM_STATUS_TABLE + 1] * 16) + 11] * 512 - 1;
-
-
-alias childPID R0;
-alias iter R1;
-alias currentPID R10;
 alias process_table_entry R11;
-alias child_pt_entry R12;
+alias currentPID R10;
 
 currentPID = [SYSTEM_STATUS_TABLE + 1];
 process_table_entry = PROCESS_TABLE + (currentPID * 16);
+
+
+[process_table_entry + 9] = 8;
+[process_table_entry + 13] = SP;
+SP = [process_table_entry + 11] * 512 - 1;
+
+alias userSp R14;
+alias childPID R0;
+alias iter R1;
+alias child_pt_entry R12;
+
+userSp = [process_table_entry + 13];
+
 
 R1 = 1;
 call MOD_1;
@@ -22,6 +26,7 @@ call MOD_1;
 child_pt_entry = PROCESS_TABLE + (childPID * 16);
 
 if(childPID == -1) then
+	[[[process_table_entry + 14] + 2 * ((userSp - 1)/512)] * 512 + ((userSp - 1)%512)] = -1;
 	[process_table_entry + 9] = 0;
 	SP = [process_table_entry+ 13];
 	ireturn;
@@ -229,8 +234,6 @@ childSP_ret = [child_pt_entry + 13] - 1;
 alias parentSP_ret R8;
 parentSP_ret = [process_table_entry + 13] - 1;
 [[ptbr + 2 * ((parentSP_ret)/ 512)] * 512 + ((parentSP_ret) % 512)] = childPID;
-
-
 
 [process_table_entry + 9] = 0;
 SP = [process_table_entry + 13];
