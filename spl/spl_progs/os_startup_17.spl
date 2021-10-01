@@ -1,30 +1,10 @@
-//load timer interrupt
-loadi(4,17);
-loadi(5,18);
-
 //load the library code
 loadi(63,13);
 loadi(64,14);
 
-//load INT7 
-loadi(16,29);
-loadi(17,30);
-
 //load IDLE Program
 loadi(69,11);
 loadi(70,12);
-
-//load the init program
-loadi(65,7);
-loadi(66,8);
-
-//load INT 10 module from disk to memory
-loadi(22,35);
-loadi(23,36);
-
-//load exception handler routine from disk to memory
-loadi(2, 15);
-loadi(3, 16);
 
 //load module 7
 loadi(54,67);

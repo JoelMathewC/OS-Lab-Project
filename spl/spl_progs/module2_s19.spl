@@ -14,7 +14,10 @@ if(functionNum == 1) then
 	
 	while([SYSTEM_STATUS_TABLE + 2] == 0) do
 		[PROCESS_TABLE + ([SYSTEM_STATUS_TABLE + 1] * 16) + 4] = WAIT_MEM;
+		
+		multipush(R1,R2);
 		call MOD_5;
+		multipop(R1,R2);
 	endwhile;
 	
 	[SYSTEM_STATUS_TABLE + 2] = [SYSTEM_STATUS_TABLE + 2] - 1;
@@ -84,18 +87,18 @@ if(functionNum == 5) then
 	alias iter R3;
 	alias iter2 R5;
 	alias disk_map_table_entry R4;
-	alias process_table_entry R6;
+	alias page_table_entry R6;
 	
 	
 	iter = 0;
 	while(iter < MAX_PROC_NUM) do
 		disk_map_table_entry = DISK_MAP_TABLE + iter * 10;
-		process_table_entry = [PROCESS_TABLE + (iter * 16) + 14];
+		page_table_entry = [PROCESS_TABLE + (iter * 16) + 14];
 		
-		iter2 = 0;
-		while(iter2 < 10) do
-			if([disk_map_table_entry + iter2] == blockNum && [process_table_entry + iter2*2] != -1) then
-				R0 = [process_table_entry + iter2*2];
+		iter2 = 4;
+		while(iter2 < 8) do
+			if([disk_map_table_entry + iter2] == blockNum && [page_table_entry + iter2*2] != -1) then
+				R0 = [page_table_entry + iter2*2];
 				[MEMORY_FREE_LIST + R0] = [MEMORY_FREE_LIST + R0] + 1;
 				return;
 			endif;

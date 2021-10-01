@@ -115,6 +115,6 @@ MOV [R4], R16
 RET
 JMP _L6
 _L5:
-RET
 _L6:
+RET
 HALT

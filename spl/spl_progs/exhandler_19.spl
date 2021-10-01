@@ -40,29 +40,17 @@ else
 	
 	if(EPN >= 4 && EPN <= 7) then 
 	
-		
-		
-		iter = 1;
-		while(iter < 4 && [DISK_MAP_TABLE + ([SYSTEM_STATUS_TABLE + 1] * 10) + 4 + iter] != -1) do
-		
-	
-	
-			multipush(R1,R2);
-			R2 = [DISK_MAP_TABLE + ([SYSTEM_STATUS_TABLE + 1] * 10) + 4 + iter];
-			
+			multipush(R0,R1,R2);
+			R2 = [DISK_MAP_TABLE + ([SYSTEM_STATUS_TABLE + 1] * 10) + EPN];
 			R1 = 5;
 			call MOD_2;
-			multipop(R1,R2);
+			R3 = R0;
+			multipop(R0,R1,R2);
 			
-			[ptbr + 8 + 2*iter] = R0;
-			[ptbr + 9 + 2*iter] = "1100";
+			[ptbr + EPN*2] = R3;
+			[ptbr + EPN*2 + 1] = "1100";
 			
-			
-			iter = iter + 1;
-		
-		endwhile;
-		
-		
+				
 		
 	endif;
 	

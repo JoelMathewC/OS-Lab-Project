@@ -56,8 +56,6 @@ if(functionNum == 7) then
 		
 		iter = 0;
 		while(iter < 16) do
-			print "h";
-			print iter;
 			if(([PROCESS_TABLE + iter * 16 + 4] == WAIT_SEMAPHORE) && ([PROCESS_TABLE + iter * 16 + 5] == sem_id)) then
 				[PROCESS_TABLE + iter * 16 + 4] = READY;
 			endif;
@@ -67,6 +65,8 @@ if(functionNum == 7) then
 		[SEMAPHORE_TABLE + 4*sem_id + 1] = [SEMAPHORE_TABLE + 4*sem_id + 1] - 1;
 	endif;
 	
+	
+	R0 = 0;
 	return;
 endif;
 

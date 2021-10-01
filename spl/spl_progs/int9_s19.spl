@@ -94,16 +94,18 @@ ptbr = [PROCESS_TABLE + ([SYSTEM_STATUS_TABLE+1]*16) + 14];
 multipush(R0,R1,R2,R3,R4,R5,R6);
 R1 = 1;
 call MOD_2;
-[ptbr+16] = R0;
-[ptbr+17] = "0110";
+R7 = R0;
 multipop(R0,R1,R2,R3,R4,R5,R6);
+[ptbr+16] = R7;
+[ptbr+17] = "0110";
 
 multipush(R0,R1,R2,R3,R4,R5,R6);
 R1 = 1;
 call MOD_2;
-[ptbr+18] = R0;
-[ptbr+19] = "0110";
+R7 = R0;
 multipop(R0,R1,R2,R3,R4,R5,R6);
+[ptbr+18] = R7;
+[ptbr+19] = "0110";
 
 
 
