@@ -1,9 +1,11 @@
 //SETTING MODE FLAG FIELD which indicates if execution is in user mode, exception handler or system call.
 
-[PROCESS_TABLE + ([SYSTEM_STATUS_TABLE + 1] * 16) + 9] = 7;
+[PROCESS_TABLE + [SYSTEM_STATUS_TABLE + 1] * 16 + 9] = 5;
 
 alias userSp R1;
 userSp = SP;
+
+
 
 [PROCESS_TABLE + ([SYSTEM_STATUS_TABLE+1]*16) + 13] = SP;
 SP = [PROCESS_TABLE + ([SYSTEM_STATUS_TABLE + 1]* 16) + 11] * 512 - 1;
@@ -23,10 +25,10 @@ alias physicalAddrRetVal R6;
 physicalAddrRetVal = ([PTBR + 2* ((userSp - 1) / 512)] * 512) + ((userSp - 1) % 512);
 
 alias word R7;
-word = [([PTBR + 2* ((userSp - 3) / 512)] * 512) + ((userSp - 3) % 512)];
+word = [[PTBR + 2*((userSp-3)/512)] * 512 +((userSp - 3)%512)];
 
 
-if(fileDescriptor != -1)
+if(fileDescriptor != -2)
 then
 	
 	if(fileDescriptor < 0 || fileDescriptor > 7) then
@@ -37,7 +39,6 @@ then
 	endif;
 	
 	alias per_process_entry R8;
-	
 	per_process_entry = [PROCESS_TABLE + [SYSTEM_STATUS_TABLE + 1]*16 + 11] * 512 + 496 + 2*fileDescriptor;
 	
 	if([per_process_entry] != FILE) then
@@ -47,20 +48,32 @@ then
 		ireturn;
 	endif;
 	
-	
 	alias open_ft_index R9;
 	alias inode_index R10;
 	
 	open_ft_index = [per_process_entry + 1];
 	inode_index = [OPEN_FILE_TABLE + open_ft_index*4];
 	
+	
+	alias userID R11;
+	alias inode_entry R12;
+	userID = [PROCESS_TABLE + [SYSTEM_STATUS_TABLE + 1] * 16 + 3];
+	inode_entry = INODE_TABLE + inode_index*16;
+	
+	if(userID != 0 && userID != [inode_entry + 3] && [inode_entry + 4] == 0) then
+		[physicalAddrRetVal] = -3;
+		SP = userSp;
+		[PROCESS_TABLE + ([SYSTEM_STATUS_TABLE + 1] * 16) + 9] = 0;
+		ireturn;
+	endif;
+	
 	//acquire inode
-	multipush(R1,R2,R3,R4,R5,R6,R7,R8,R9,R10);
+	multipush(R1,R2,R3,R4,R5,R6,R7,R8,R9,R10,R11,R12);
 	R1 = 4;
 	R2 = [SYSTEM_STATUS_TABLE + 1];
 	R3 = inode_index;
 	call MOD_0;
-	multipop(R1,R2,R3,R4,R5,R6,R7,R8,R9,R10);
+	multipop(R1,R2,R3,R4,R5,R6,R7,R8,R9,R10,R11,R12);
 	
 	
 	if(R0 == -1) then
@@ -70,96 +83,91 @@ then
 		ireturn;
 	endif;
 	
-	alias lseek R11;
+	alias lseek R13;
 	lseek = [OPEN_FILE_TABLE + open_ft_index*4 + 2];
 	
-	
-	if(inode_index == INODE_ROOT) then
-		//lseek is at end of file
-		if(lseek >= 480) then
-			
-			
-			//release inode
-			multipush(R1,R2,R3,R4,R5,R6,R7,R8,R9,R10,R11);
-			R1 = 5;
-			R2 = [SYSTEM_STATUS_TABLE + 1];
-			R3 = inode_index;
-			call MOD_0;
-			multipop(R1,R2,R3,R4,R5,R6,R7,R8,R9,R10,R11);
-			
-			[physicalAddrRetVal] = -2;
-			SP = userSp;
-			[PROCESS_TABLE + ([SYSTEM_STATUS_TABLE + 1] * 16) + 9] = 0;
-			ireturn;
-			
-		else
-		
-			[word] = [ROOT_FILE + lseek];
-			[OPEN_FILE_TABLE + open_ft_index*4 + 2] = [OPEN_FILE_TABLE + open_ft_index*4 + 2] + 1;
-		endif;
-	
-	else
-		
-		if(lseek >= [INODE_TABLE + inode_index*16 + 2]) then
-			//release inode
-			multipush(R1,R2,R3,R4,R5,R6,R7,R8,R9,R10,R11);
-			R1 = 5;
-			R2 = [SYSTEM_STATUS_TABLE + 1];
-			R3 = inode_index;
-			call MOD_0;
-			multipop(R1,R2,R3,R4,R5,R6,R7,R8,R9,R10,R11);
-			
-			[physicalAddrRetVal] = -2;
-			SP = userSp;
-			[PROCESS_TABLE + ([SYSTEM_STATUS_TABLE + 1] * 16) + 9] = 0;
-			ireturn;
-		endif;
-		
-		//buffered read
-		multipush(R1,R2,R3,R4,R5,R6,R7,R8,R9,R10,R11);
-		R1 = 2;
+	if(lseek == MAX_FILE_SIZE) then
+		//release inode
+		multipush(R1,R2,R3,R4,R5,R6,R7,R8,R9,R10,R11,R12,R13);
+		R1 = 5;
 		R2 = [SYSTEM_STATUS_TABLE + 1];
-		R3 = [INODE_TABLE + inode_index* 16 + 8 + lseek/512];
-		R4 = lseek%512;
-		R5 = word;
-		call MOD_3;
-		multipop(R1,R2,R3,R4,R5,R6,R7,R8,R9,R10,R11);
-		
-		[OPEN_FILE_TABLE + open_ft_index*4 + 2] = [OPEN_FILE_TABLE + open_ft_index*4 + 2] + 1;
+		R3 = inode_index;
+		call MOD_0;
+		multipop(R1,R2,R3,R4,R5,R6,R7,R8,R9,R10,R11,R12,R13);
+			
+		[physicalAddrRetVal] = -2;
+		SP = userSp;
+		[PROCESS_TABLE + ([SYSTEM_STATUS_TABLE + 1] * 16) + 9] = 0;
+		ireturn;
 	endif;
 	
+	if(lseek%512 == 0 && lseek == [inode_entry + 2]) then
+		
+		multipush(R1,R2,R3,R4,R5,R6,R7,R8,R9,R10,R11,R12,R13);
+		R1 = 3;
+		call MOD_2;
+		multipop(R1,R2,R3,R4,R5,R6,R7,R8,R9,R10,R11,R12,R13);
+		
+		if(R0 == -1) then
+			//release inode
+			multipush(R1,R2,R3,R4,R5,R6,R7,R8,R9,R10,R11,R12,R13);
+			R1 = 5;
+			R2 = [SYSTEM_STATUS_TABLE + 1];
+			R3 = inode_index;
+			call MOD_0;
+			multipop(R1,R2,R3,R4,R5,R6,R7,R8,R9,R10,R11,R12,R13);
+			
+			[physicalAddrRetVal] = -2;
+			SP = userSp;
+			[PROCESS_TABLE + ([SYSTEM_STATUS_TABLE + 1] * 16) + 9] = 0;
+			ireturn;
+		endif;
+		
+		[inode_entry + 8 + (lseek/512)] = R0;
+		
+	endif;
 	
+	//buffered write
+	multipush(R1,R2,R3,R4,R5,R6,R7,R8,R9,R10,R11,R12,R13);
+	R1 = 1;
+	R2 = [SYSTEM_STATUS_TABLE + 1];
+	R3 = [INODE_TABLE + inode_index* 16 + 8 + lseek/512];
+	R4 = lseek%512;
+	R5 = word;
+	call MOD_3;
+	multipop(R1,R2,R3,R4,R5,R6,R7,R8,R9,R10,R11,R12,R13);
+	
+	if(lseek == [inode_entry + 2]) then
+		[inode_entry + 2] = [inode_entry + 2] + 1;
+		[ROOT_FILE + inode_index*8 + 1] = [ROOT_FILE + inode_index*8 + 1] + 1;
+	endif;
+		
+	[OPEN_FILE_TABLE + open_ft_index*4 + 2] = [OPEN_FILE_TABLE + open_ft_index*4 + 2] + 1;
 	
 	//release inode
-	multipush(R1,R2,R3,R4,R5,R6,R7,R8,R9,R10,R11);
+	multipush(R1,R2,R3,R4,R5,R6,R7,R8,R9,R10,R11,R12,R13);
 	R1 = 5;
 	R2 = [SYSTEM_STATUS_TABLE + 1];
 	R3 = inode_index;
 	call MOD_0;
-	multipop(R1,R2,R3,R4,R5,R6,R7,R8,R9,R10,R11);
-	
+	multipop(R1,R2,R3,R4,R5,R6,R7,R8,R9,R10,R11,R12,R13);
 	
 	
 else
 	
 	
 	multipush(R1,R2,R3,R4,R5,R6,R7);
-	
-	//Function number of terminal read
-	R1 = 4;
+	R1 = 3;
 	R2 = [SYSTEM_STATUS_TABLE+1];
 	R3 = word;
 	call MOD_4;
 	multipop(R1,R2,R3,R4,R5,R6,R7);
 	
-	
 endif;
 
 [physicalAddrRetVal] = 0;
 SP = userSp;
-[PROCESS_TABLE + ([SYSTEM_STATUS_TABLE + 1] * 16) + 9] = 0;
-
-
+[PROCESS_TABLE + [SYSTEM_STATUS_TABLE + 1] * 16 + 9] = 0;
 
 ireturn;
 
