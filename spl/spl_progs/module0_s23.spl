@@ -1,4 +1,4 @@
-
+//RESOURCE MANAGER MODULE
 alias functionNum R1;
 alias currentPID R2;
 
@@ -36,7 +36,7 @@ if(functionNum == 4) then
 		multipop(R1,R2,R3);
 	endwhile;
 	
-	if([FILE_STATUS_TABLE + index*4] == -1 && [FILE_STATUS_TABLE + index*4 + 1] == -1) then
+	if([INODE_TABLE + index*16 + 1] == -1) then
 		R0 = -1;
 		return;
 	endif;
@@ -66,6 +66,7 @@ if(functionNum == 5) then
 		if([PROCESS_TABLE + (iter * 16) + 4] == WAIT_FILE && [PROCESS_TABLE + (iter * 16) + 5] == index) then
 			[PROCESS_TABLE + (iter * 16) + 4] = READY;
 		endif;
+		iter = iter + 1;
 	endwhile;
 	
 	R0 = 0;
