@@ -18,7 +18,7 @@ int main()
 		while(a != -2) do
 			
 			temp = i%8;
-			if(temp == 0 AND data != "0") then
+			if(temp == 0 AND data != "-1" AND data != "0") then
 				temp = exposcall("Write",-2,data);
 			endif;
 			
