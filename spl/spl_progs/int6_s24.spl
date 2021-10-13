@@ -101,8 +101,9 @@ then
 			ireturn;
 			
 		else
-		
-			[word] = [ROOT_FILE + lseek];
+			//print("rootval");
+			//print [ROOT_FILE + lseek];
+			[[[PROCESS_TABLE + [SYSTEM_STATUS_TABLE + 1]*16 + 14] + 2 * (word/512)] * 512 + (word%512)] = [ROOT_FILE + lseek];
 			[OPEN_FILE_TABLE + open_ft_index*4 + 2] = [OPEN_FILE_TABLE + open_ft_index*4 + 2] + 1;
 		endif;
 	

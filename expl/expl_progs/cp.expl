@@ -22,9 +22,10 @@ int main()
 		
 		
 		a = exposcall("Seek",f1,0);
+		a = exposcall("Read",f1,data);
 		while(a != -2) do
-			temp = exposcall("Read",f1,data);
 			temp = exposcall("Write",f2,data);
+			a = exposcall("Read",f1,data);
 		endwhile;
 		
 		temp = exposcall("Close",f1);

@@ -93,6 +93,9 @@ loadi(60,4);
 //load disk free list
 loadi(61,2);
 
+//load root file
+loadi(62,5);
+
 //load the init program
 loadi(65,7);
 loadi(66,8);
