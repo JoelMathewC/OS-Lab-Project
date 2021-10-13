@@ -16,8 +16,6 @@ if(functionNum == 2) then
 	alias bufferNum R7;
 	
 	
-	//print "PHY";
-	//print physicalAddr;
 	
 	bufferNum = blockNum % 4;
 	pageNum = 71 + bufferNum;
@@ -203,6 +201,7 @@ if(functionNum == 4) then
 	inode_index = [open_ft_entry];
 	[open_ft_entry + 1] = [open_ft_entry + 1] - 1;
 	
+	//if open instance count is 0
 	if([open_ft_entry + 1] == 0) then
 		[open_ft_entry] = -1;
 		[open_ft_entry + 1] = -1;

@@ -69,7 +69,7 @@ if(syscallNum == 14) then
 	iter = 0;
 	
 	while(iter < 16) do
-		if([PROCESS_TABLE + (iter*16) + 4] == WAIT_PROCESS) then
+		if([PROCESS_TABLE + (iter*16) + 4] == WAIT_PROCESS && [PROCESS_TABLE + (iter*16) + 5] == [SYSTEM_STATUS_TABLE + 1]) then
 			[PROCESS_TABLE + (iter*16) + 4] = READY;
 		endif;
 		iter = iter + 1;

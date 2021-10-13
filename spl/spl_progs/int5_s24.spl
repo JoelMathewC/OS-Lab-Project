@@ -23,6 +23,7 @@ syscallNum = [[ptbr + 2*((userSp - 5)/512)] * 512 + (userSp - 5)%512];
 //saving the retAddr in a register
 retAddr = [ptbr + 2*((userSp - 1)/512)] * 512 + (userSp - 1)%512;
 
+//open
 if(syscallNum == 2) then
 
 	alias fileName R6;
@@ -82,7 +83,7 @@ if(syscallNum == 2) then
 	
 endif;
 
-
+//close
 if(syscallNum == 3) then
 
 	alias fileDesc R6;

@@ -6,6 +6,7 @@ alias currentPID R2;
 
 //acquire buffer
 if(functionNum == 1) then
+
 	alias buffer_index R3;
 	alias buffer_entry R4;
 	
@@ -13,7 +14,10 @@ if(functionNum == 1) then
 	while([buffer_entry + 2] != -1) do
 		[PROCESS_TABLE + currentPID*16 + 4] = WAIT_BUFFER;
 		[PROCESS_TABLE + currentPID*16 + 5] = buffer_index;
+		
+		multipush(R1,R2,R3,R4);
 		call MOD_5;
+		multipop(R1,R2,R3,R4);
 	endwhile;
 	
 	[buffer_entry + 2] = currentPID;
@@ -37,6 +41,7 @@ if(functionNum == 2) then
 	[buffer_entry + 2] = -1;
 	
 	alias iter R5;
+	iter = 0;
 	while(iter < 16) do
 		if([PROCESS_TABLE + iter*16 + 4] == WAIT_BUFFER && [PROCESS_TABLE + iter*16 + 5] == buffer_index) then
 			[PROCESS_TABLE + iter*16 + 4] = READY;
