@@ -82,7 +82,7 @@ if(syscallNum == 1) then
 	[ROOT_FILE + iter*8] = filename;
 	[ROOT_FILE + iter*8 + 1] = 0;
 	[ROOT_FILE + iter*8 + 2] = DATA;
-	[ROOT_FILE + iter*8 + 3] = [pte + 3];
+	[ROOT_FILE + iter*8 + 3] = [USER_TABLE + 2*[pte + 3]];
 	[ROOT_FILE + iter*8 + 4] = perm;
 	
 	

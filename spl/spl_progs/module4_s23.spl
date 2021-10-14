@@ -95,6 +95,9 @@ if(functionNum == 4) then
 	
 	read;
 	
+
+
+	
 	[PROCESS_TABLE + (currentPID * 16) + 4] = WAIT_TERMINAL;
 	
 	multipush(R1,R2,R3);

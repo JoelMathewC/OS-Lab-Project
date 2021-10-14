@@ -70,6 +70,7 @@ if([new_process_table + 4] == CREATED) then
 endif;
 
 
+
 [new_process_table + 4] = RUNNING;
 multipop(BP);
 return;

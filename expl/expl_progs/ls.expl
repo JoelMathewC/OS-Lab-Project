@@ -10,7 +10,6 @@ int main()
 
 		fileDesc = exposcall("Open","root");
 		
-		breakpoint;
 
 		i = 0;
 		a = exposcall("Seek",fileDesc,0);
