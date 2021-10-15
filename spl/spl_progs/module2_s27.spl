@@ -13,7 +13,6 @@ if(functionNum == 1) then
 	[SYSTEM_STATUS_TABLE + 3] = [SYSTEM_STATUS_TABLE + 3] + 1;
 	
 	while([SYSTEM_STATUS_TABLE + 2] == 0) do
-		print "FREE PAGE";
 		[PROCESS_TABLE + ([SYSTEM_STATUS_TABLE + 1] * 16) + 4] = WAIT_MEM;
 		
 		multipush(R1,R2);
@@ -26,7 +25,7 @@ if(functionNum == 1) then
 	
 	alias iter R3;
 	
-	iter = 0;
+	iter = 76;
 	while(iter < 128) do
 		if([MEMORY_FREE_LIST + iter] == 0) then
 			[MEMORY_FREE_LIST + iter] = 1;
@@ -36,6 +35,8 @@ if(functionNum == 1) then
 	endwhile;
 	
 	R0 = iter;
+	
+	
 	
 	
 	return;

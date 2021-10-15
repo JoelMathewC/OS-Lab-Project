@@ -1,4 +1,9 @@
 //EXCEPTION HANDLER
+if(EC != 0 || [PROCESS_TABLE + ([SYSTEM_STATUS_TABLE + 1] * 16) + 13] == [PROCESS_TABLE + ([SYSTEM_STATUS_TABLE + 1] * 16) + 15] * 512 - 1) then
+	print "EXHANDLER";
+	breakpoint;
+endif;
+
 
 [PROCESS_TABLE + ([SYSTEM_STATUS_TABLE + 1] * 16) + 9] = -1;
 

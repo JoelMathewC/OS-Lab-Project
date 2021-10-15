@@ -85,6 +85,7 @@ begin
   write("Stored");
 
   pid=exposcall("Fork");
+
   if(pid!=0) then
     while(pid<13) do
       x=exposcall("Wait", pid);

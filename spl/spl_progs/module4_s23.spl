@@ -34,10 +34,13 @@ endif;
 if(functionNum == 2) then
 
 	
-	
+	//print "DISK LOAD";
 
 	alias pageNum R3;
 	alias blockNum R4;
+	
+
+	
 	
 	multipush(R1,R2,R3,R4);
 	R1 = 3;
@@ -45,13 +48,15 @@ if(functionNum == 2) then
 	multipop(R1,R2,R3,R4);
 	
 	
-
+	//print "backmod0";
 	
 	
 	[DISK_STATUS_TABLE + 1] = 0; //Load operation
 	[DISK_STATUS_TABLE + 2] = pageNum;
 	[DISK_STATUS_TABLE + 3] = blockNum;
 	load(pageNum,blockNum);
+	
+	//print "afterloadcmd";
 	
 	[PROCESS_TABLE + (currentPID*16) + 4] = WAIT_DISK;
 	

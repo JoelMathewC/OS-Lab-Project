@@ -31,9 +31,10 @@ else
 		if([SYSTEM_STATUS_TABLE + 4] > 0) then
 			
 			R1 = 3;
-			while(R1 < 16) do
-				if([PROCESS_TABLE + R1*16] > MAX_TICK && [PROCESS_TABLE + R1*16 + 6] == 1) then
+			while(R1 < 15) do
+				if([PROCESS_TABLE + R1*16 + 6] == 1 && [PROCESS_TABLE + R1*16 + 4] == READY && [PROCESS_TABLE + R1*16] > MAX_TICK) then
 					[SYSTEM_STATUS_TABLE + 5] = SWAP_IN;
+					break;
 				endif;
 				R1 = R1 + 1;
 			endwhile;

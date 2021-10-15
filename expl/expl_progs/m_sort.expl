@@ -26,6 +26,7 @@ List mergeSort(List top)
   enddecl
 
   begin
+
     if((top!=null) AND (top.next!=null)) then
       slow=top;
       fast=top.next;
@@ -41,9 +42,11 @@ List mergeSort(List top)
       a=top;
       b=slow.next;
       slow.next=null;
+      
 
       a=mergeSort(a);
       b=mergeSort(b);
+
 
       top=merge(a, b);
     endif;
@@ -59,6 +62,7 @@ List merge(List a, List b)
   enddecl
 
   begin
+
     result=null;
 
     if(a==null) then
@@ -78,6 +82,7 @@ List merge(List a, List b)
       endif;
     endif;
 
+
     return result;
   end
 }
@@ -91,10 +96,9 @@ int main()
   enddecl
 
   begin
-    write("HERE");
-    breakpoint;
+
+
     x=initialize();
-    write("HERE1");
     semid=exposcall("Semget");
     pid=exposcall("Getpid");
 
@@ -145,8 +149,9 @@ int main()
       counter=counter+1;
     endwhile;
 
-    write("Reached here");
     head=mergeSort(head);
+    
+    
 
     x=exposcall("Seek", fp, 0);
     p=head;
@@ -157,13 +162,22 @@ int main()
     endwhile;
 
     x=exposcall("Close", fp);
+    
+    
+    
     x=exposcall("Semrelease");
+    
+    write(pid);
+    write("Sem done");
+    
     pid=exposcall("Getpid");
     x=pid+1;
     while(x<13) do
     	a=exposcall("Wait",x);
     	x=x+1;
     endwhile;
+    
+    write(pid);
     write("Sort");
     return 1;
   end
