@@ -94,7 +94,7 @@ loadi(47,60);
 loadi(48,61);
 loadi(49,62);
 
-//load the MOD 5
+//load MOD 5
 loadi(50,63);
 loadi(51,64);
 
