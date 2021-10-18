@@ -18,11 +18,22 @@ alias userSp R0;
 userSp = [PROCESS_TABLE + ([SYSTEM_STATUS_TABLE + 1] * 16) + 13];
 
 if(EC != 0 || userSp == [PROCESS_TABLE + ([SYSTEM_STATUS_TABLE + 1] * 16) + 15] * 512 - 1) then
+	print "-------";
 	print "ERROR HALTING";
 	
-	print EC;
+	if(EC == 1) then
+		print "INSTRUCTION ILLEGAL";
+		print EIP;
+	else
+		if(EC == 2) then
+			print "MEMORY ILLEGAL";
+			print EMA;
+		else
+			print "ARITH ILLEGAL";
+		endif;
+	endif;
 	
-	print [SYSTEM_STATUS_TABLE + 1];
+	print "-------";
 	
 	
 	multipush(R0);

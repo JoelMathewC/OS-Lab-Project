@@ -6,11 +6,13 @@ alias currentPID R2;
 
 //acquire buffer
 if(functionNum == 1) then
-
+	//argument
 	alias buffer_index R3;
-	alias buffer_entry R4;
 	
+	alias buffer_entry R4;
 	buffer_entry = BUFFER_TABLE + buffer_index * 4;
+	
+	
 	while([buffer_entry + 2] != -1) do
 		[PROCESS_TABLE + currentPID*16 + 4] = WAIT_BUFFER;
 		[PROCESS_TABLE + currentPID*16 + 5] = buffer_index;
@@ -28,9 +30,10 @@ endif;
 
 //release buffer
 if(functionNum == 2) then
+	//argument
 	alias buffer_index R3;
-	alias buffer_entry R4;
 	
+	alias buffer_entry R4;
 	buffer_entry = BUFFER_TABLE + buffer_index * 4;
 	
 	if([buffer_entry + 2] != currentPID) then

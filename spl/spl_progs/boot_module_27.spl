@@ -138,6 +138,7 @@ ProcessTableEntry = PROCESS_TABLE + 16;
 
 //Adding data to process table
 [ProcessTableEntry + 11] = 77; //Set the user area page physical address to 77
+[ProcessTableEntry] = 0; //tick to 0
 [ProcessTableEntry + 1] = 1; // First process, so set the PID to 1
 [ProcessTableEntry + 3] = 1; // Setting the userid to ROOT
 [ProcessTableEntry + 4] = CREATED;
@@ -190,6 +191,7 @@ ProcessTableEntry = PROCESS_TABLE + 2*16;
 
 //Adding data to process table
 [ProcessTableEntry + 11] = 80; //Set the user area page physical address to 80
+[ProcessTableEntry] = 0; //setting tick to 0
 [ProcessTableEntry + 1] = 2; // Second process, so set the PID to 2
 [ProcessTableEntry + 2] = 1; // PPID to 1
 
@@ -233,23 +235,24 @@ ProcessTableEntry = PROCESS_TABLE + 2*16;
 [78*512] = [67*512 + 1];
 
 alias disk_mt_entry R2;
+alias iter R3;
+
+
 disk_mt_entry = DISK_MAP_TABLE + 2*10;
 
-[disk_mt_entry] = -1;
-[disk_mt_entry + 1] = -1;
-[disk_mt_entry + 2] = -1;
-[disk_mt_entry + 3] = -1;
-[disk_mt_entry + 4] = 7;
-[disk_mt_entry + 5] = 8;
-[disk_mt_entry + 6] = -1;
-[disk_mt_entry + 7] = -1;
-[disk_mt_entry + 8] = -1;
-[disk_mt_entry + 9] = -1;
+iter = 0;
+while(iter < 10) do
+	[disk_mt_entry + iter] = -1;
+	iter = iter + 1;	
+endwhile;
+
+[disk_mt_entry + 4] = 9;
+[disk_mt_entry + 5] = 10;
+
 
 //----------------------------- SETTING ALL OTHER PROCESS STATUS TO TERMINATED --------------
-alias iter R3;
-iter = 2;
 
+iter = 3;
 while(iter < 15) do
 	[PROCESS_TABLE + 16*iter] = 0;
 	[PROCESS_TABLE + 16*iter + 4] = TERMINATED;
@@ -257,41 +260,27 @@ while(iter < 15) do
 endwhile;
 
 
-iter = 0;
-while(iter < MAX_FILE_NUM) do
-	[FILE_STATUS_TABLE + iter*4] = -1;
-	[FILE_STATUS_TABLE + iter*4 + 1] = -1;
-	iter = iter + 1;
-endwhile;
-
-iter = 0;
-while(iter<MAX_BUFFER) do
-	[BUFFER_TABLE + iter*4] = -1;
-	[BUFFER_TABLE + iter*4 + 1] = 0;
-	[BUFFER_TABLE + iter*4 + 2] = -1;
-	iter = iter + 1;
-endwhile;
-
-
 //--------------------------- INITIALIZAING SOME VARIABLES ----------------------------------
 
 iter = 0;
-while(iter <= 82) do
-	[MEMORY_FREE_LIST + iter] = 1;
-	iter = iter + 1;
-endwhile;
-
 while(iter < 128) do
-	[MEMORY_FREE_LIST + iter] = 0;
+	if(iter <= 82) then
+		[MEMORY_FREE_LIST + iter] = 1;
+	else
+		[MEMORY_FREE_LIST + iter] = 0;
+	endif;
+	
 	iter = iter + 1;
 endwhile;
 
-
+[SYSTEM_STATUS_TABLE + 2] = 45; //MEM_FREE_COUNT
+[SYSTEM_STATUS_TABLE + 3] = 0; //setting wait mem count to 0
 [SYSTEM_STATUS_TABLE + 4] = 0; //setting swapped count to 0
 [SYSTEM_STATUS_TABLE + 5] = 0; //setting page status to 0
-[SYSTEM_STATUS_TABLE + 3] = 0; //setting wait mem count to 0
-[SYSTEM_STATUS_TABLE + 2] = 45; //MEM_FREE_COUNT
-[DISK_STATUS_TABLE + 0] = 0;
+
+//setting status fields to 0
+[DISK_STATUS_TABLE] = 0;
+[TERMINAL_STATUS_TABLE] = 0;
 
 
 
@@ -310,12 +299,28 @@ while(iter < MAX_OPENFILE_NUM) do
 	iter = iter + 1;
 endwhile;
 
+iter = 0;
+while(iter<MAX_BUFFER) do
+	[BUFFER_TABLE + iter*4] = -1;
+	[BUFFER_TABLE + iter*4 + 1] = 0;
+	[BUFFER_TABLE + iter*4 + 2] = -1;
+	iter = iter + 1;
+endwhile;
+
+iter = 0;
+while(iter < MAX_FILE_NUM) do
+	[FILE_STATUS_TABLE + iter*4] = -1;
+	[FILE_STATUS_TABLE + iter*4 + 1] = -1;
+	iter = iter + 1;
+endwhile;
+
 
 
 //-------------------------------------------------------------------------------------
 iter = 0;
 while(iter < 16) do
 	[(80 * 512) + 496 + iter] = -1;
+	[(77 * 512) + 496 + iter] = -1;
 	iter = iter + 1;
 endwhile;
 //-------------------------------------------------------------------------------------

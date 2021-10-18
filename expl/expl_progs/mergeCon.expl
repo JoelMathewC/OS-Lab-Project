@@ -20,7 +20,7 @@ enddecl
 List mergeSort(List top)
 {
   decl
-    int len, pid, temp;
+    int len, pid;
     List slow, fast, a, b;
     Share s;
   enddecl
@@ -68,11 +68,8 @@ List mergeSort(List top)
 
           //Sort from two different process
           if(pid!=0) then
-            //temp = exposcall("Write",-2,pid);
-            breakpoint;
             a=mergeSort(a);
           else
-            
             b=mergeSort(b);
             s.link=b;             //Store head in shared location
             x=exposcall("Exit");
@@ -140,9 +137,9 @@ int main()
     //Storing values in descending order
     head=null;
     counter=0;
-    while(counter<37) do //works till 37
+    while(counter<64) do
       p=alloc();
-      p.data=37-counter;
+      p.data=64-counter;
       p.next=null;
 
       if(head==null) then

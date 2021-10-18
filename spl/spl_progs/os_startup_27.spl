@@ -12,7 +12,7 @@ loadi(55,68);
 //--------------------------------- IDLE PROGRAM --------------------------
 
 
-SP = 76 * 512 - 1;
+SP = 76 * 512 + 1;
 call BOOT_MODULE;
 
 
@@ -20,6 +20,7 @@ call BOOT_MODULE;
 PTBR = PAGE_TABLE_BASE;
 PTLR = 10;
 
+[PROCESS_TABLE + 0] = 0; //tick to 0
 [PROCESS_TABLE + 1] = 0;
 [PROCESS_TABLE + 4] = RUNNING;
 [PROCESS_TABLE + 11] = 76;    //Update user area page
@@ -65,7 +66,7 @@ SP = 8*512;
 PTBR = PAGE_TABLE_BASE + 15*20;
 PTLR = 10;
 
-
+[PROCESS_TABLE + 15*16] = 0;
 [PROCESS_TABLE + 15*16 + 1] = 15;
 [PROCESS_TABLE + 15*16 + 4] = CREATED;
 [PROCESS_TABLE + 15*16 + 11] = 82;    //Update user area page

@@ -155,11 +155,16 @@ int main()
 
     x=exposcall("Seek", fp, 0);
     p=head;
+    
+    
+    
     while(p!=null) do
       word=p.data;
       x=exposcall("Write", fp, word);
       p=p.next;
     endwhile;
+    
+    
 
     x=exposcall("Close", fp);
     
@@ -167,8 +172,8 @@ int main()
     
     x=exposcall("Semrelease");
     
-    write(pid);
-    write("Sem done");
+    //write(pid);
+    //write("Sem done");
     
     pid=exposcall("Getpid");
     x=pid+1;
