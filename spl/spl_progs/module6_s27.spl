@@ -124,7 +124,7 @@ if(functionNum == 1) then
 				multipop(R1,R2,R3,R4,R5,R6);
 			
 				[ptbr + 2*iter] = -1;
-				[ptbr + 2*iter + 1] = -1;
+				[ptbr + 2*iter + 1] = "0000";
 			endif;
 			
 		endif;

@@ -26,7 +26,6 @@ List mergeSort(List top)
   enddecl
 
   begin
-
     if((top!=null) AND (top.next!=null)) then
       slow=top;
       fast=top.next;
@@ -42,11 +41,9 @@ List mergeSort(List top)
       a=top;
       b=slow.next;
       slow.next=null;
-      
 
       a=mergeSort(a);
       b=mergeSort(b);
-
 
       top=merge(a, b);
     endif;
@@ -62,7 +59,6 @@ List merge(List a, List b)
   enddecl
 
   begin
-
     result=null;
 
     if(a==null) then
@@ -82,7 +78,6 @@ List merge(List a, List b)
       endif;
     endif;
 
-
     return result;
   end
 }
@@ -96,8 +91,6 @@ int main()
   enddecl
 
   begin
-
-
     x=initialize();
     semid=exposcall("Semget");
     pid=exposcall("Getpid");
@@ -121,6 +114,8 @@ int main()
       file="temp6.dat";
     endif;
     if(pid==11) then
+    	write(" ");
+    	//breakpoint;
       file="temp7.dat";
     endif;
     if(pid==12) then
@@ -150,40 +145,23 @@ int main()
     endwhile;
 
     head=mergeSort(head);
-    
-    
 
     x=exposcall("Seek", fp, 0);
     p=head;
-    
-    
-    
     while(p!=null) do
       word=p.data;
       x=exposcall("Write", fp, word);
       p=p.next;
     endwhile;
-    
-    
 
     x=exposcall("Close", fp);
-    
-    
-    
     x=exposcall("Semrelease");
-    
-    //write(pid);
-    //write("Sem done");
-    
     pid=exposcall("Getpid");
     x=pid+1;
     while(x<13) do
     	a=exposcall("Wait",x);
     	x=x+1;
     endwhile;
-    
-    write(pid);
-    write("Sort");
     return 1;
   end
 }

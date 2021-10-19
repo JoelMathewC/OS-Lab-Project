@@ -58,8 +58,6 @@ enddecl
 
 begin
   x=initialize();
-  write("Merging");
-  breakpoint;
 
   pid1=exposcall("Fork");
   if(pid1!=0) then
