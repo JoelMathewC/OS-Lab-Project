@@ -45,6 +45,18 @@ if(syscallNum == 22) then
 		ireturn;
 	endif;
 	
+	//loop through user table to find if entry exists
+	iter = 0;
+	while(iter < MAX_USER_NUM) do
+		if([USER_TABLE + 2*iter] == username) then
+			[retAddr] = -1;
+			SP = [pte + 13];
+			[pte + 9] = 0;
+			ireturn;
+		endif;
+		iter = iter + 1;
+	endwhile;
+	
 	//loop through user table to find free entry
 	iter = 0;
 	while(iter < MAX_USER_NUM) do
